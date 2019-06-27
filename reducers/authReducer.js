@@ -12,7 +12,7 @@ const authReducer = (state = initialState, action) => {
         // State
         ...state,
         // Redux Store
-        email: action.payload,
+        loggedIn: action.payload,
       }
     }
     // Default
