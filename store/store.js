@@ -30,25 +30,22 @@ const persistConfig = {
   blacklist: [
     'counterReducer',
   ],
-}
+};
 
 // Middleware: Redux Persist Persisted Reducer
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
-// Middleware: Redux Persist Store
+// Redux: Store
 const store = createStore(
   persistedReducer,
   applyMiddleware(...middleware),
 );
 
 // Middleware: Redux Persist Persister
-let persistor = persistStore(store)
-
-// Redux: State
-// store.subscribe(() => console.log('store', store.getState()));
+let persistor = persistStore(store);
 
 // Exports
 export {
   store,
-  persistor
+  persistor,
 };
