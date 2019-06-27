@@ -1,55 +1,25 @@
 // Imports: Dependencies
 import React from 'react';
-import { AsyncStorage, StyleSheet, Text, View } from 'react-native';
-import { persistStore } from 'redux-persist';
+import { PersistGate } from 'redux-persist/es/integration/react'
 import { Provider } from 'react-redux';
-import store from './store/store';
 
 // Imports: Screens
 import Counter from './screens/Counter';
 
+// Imports: Redux Persist Persister
+import { store, persistor } from './store/store';
+
 // React Native: App
-export default function App() {
-
-  state = {
-    isReady: false,
-  }
-
-  // Component Did Mount
-  componentDidMount = () => {
-    try {
-      // Redux Persist: 
-      persistStore(
-        store,
-        {
-          // Storage Method (React Native)
-          storage: AsyncStorage,
-          // Whitelist (Save Specific Reducers)
-          whitelist: [
-            'authReducer',
-          ],
-          // Blacklist (Don't Save Specific Reducers)
-          blacklist: [
-            'counterReducer',
-          ],
-        },
-        () => {
-          this.setState({
-            isReady: true,
-          })
-        }
-      )
-    }
-    catch (error) {
-      console.log(error);
-    }
-  }
-
-
+export default App = () => {
   return (
     // Redux: Global Store
     <Provider store={store}>
-      <Counter />
+      <PersistGate 
+        loading={null}
+        persistor={persistor}
+      >
+        <Counter />
+      </PersistGate>
     </Provider>
   );
 };
