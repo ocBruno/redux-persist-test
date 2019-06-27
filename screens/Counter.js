@@ -16,19 +16,42 @@ class Counter extends React.Component {
     };
   }
 
+  // Log In
+  login = () => {
+    try {
+      // Redux: Log In
+      this.props.reduxLogin();
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
+
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <Text style={styles.text}>Counter</Text>
+
+        <View style={styles.loggedInContainer}>
+          <Text style={styles.loggedInText}>Logged In: </Text>
+          <Text style={styles.loggedInText}>{`${this.props.loggedIn}`}</Text>
+
+          <Button
+            title="Login"
+            onPress={this.props.loggedIn === false ? () => this.props.reduxLogin(true) : () => this.props.reduxLogin(false)}
+            style={styles.loginButton}
+          />
+        </View>
+
+        <Text style={styles.counterTitle}>Counter</Text>
 
         <View style={styles.counterContainer}>
-          <TouchableOpacity onPress={this.props.reduxIncreaseCounter}>
+          <TouchableOpacity onPress={() => this.props.reduxIncreaseCounter()}>
             <Text style={styles.buttonText}>+</Text>
           </TouchableOpacity>
 
           <Text style={styles.counterText}>{this.props.counter}</Text>
 
-          <TouchableOpacity onPress={this.props.reduxDecreaseCounter}>
+          <TouchableOpacity onPress={() => this.props.reduxDecreaseCounter()}>
             <Text style={styles.buttonText}>-</Text>
           </TouchableOpacity>
         </View>
@@ -45,28 +68,45 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  loggedInContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 40,
+  },
+  loginButton: {
+    marginTop: 20,
+    paddingTop: 20,
+  },
   counterContainer: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  // text: {
-  //   fontFamily: 'System',
-  //   fontSize: 16,
-  //   fontWeight: '400',
-  //   color: '#222222',
-  // },
+  loggedInText: {
+    fontFamily: 'System',
+    fontSize: 17,
+    fontWeight: '400',
+    color: '#000',
+  },
+  counterTitle: {
+    fontFamily: 'System',
+    fontSize: 32,
+    fontWeight: '700',
+    color: '#000',
+  },
   counterText: {
     fontFamily: 'System',
     fontSize: 36,
     fontWeight: '400',
-    color: '#222222',
+    color: '#000',
   },
   buttonText: {
     fontFamily: 'System',
     fontSize: 50,
-    fontWeight: '200',
+    fontWeight: '300',
     color: '#007AFF',
     marginLeft: 40,
     marginRight: 40,
@@ -81,6 +121,7 @@ const mapStateToProps = (state) => {
   // Redux Store --> Component
   return {
     counter: state.counterReducer.counter,
+    loggedIn: state.authReducer.loggedIn,
   };
 };
 
@@ -96,6 +137,11 @@ const mapDispatchToProps = (dispatch) => {
       // Decrease Counter
       reduxDecreaseCounter: (payload) => dispatch({
         type: 'DECREASE_COUNTER',
+        payload: payload,
+      }),
+      // Login
+      reduxLogin: (payload) => dispatch({
+        type: 'LOGGED_IN',
         payload: payload,
       }),
    };
