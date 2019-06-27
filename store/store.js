@@ -1,7 +1,9 @@
 // Imports: Dependencies
+import { AsyncStorage } from 'react-native';
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { createLogger } from 'redux-logger';
+import { persistStore, persistReducer } from 'redux-persist';
 
 // Imports: Redux
 import rootReducer from '../reducers/index';
@@ -14,14 +16,39 @@ if (process.env.NODE_ENV !== 'production') {
   middleware.push(createLogger());
 }
 
-// Redux: Store
+// Middleware: Redux Persist Config
+const persistConfig = {
+  // Root?
+  key: 'root',
+  // Storage Method (React Native)
+  storage: AsyncStorage,
+  // Whitelist (Save Specific Reducers)
+  whitelist: [
+    'authReducer',
+  ],
+  // Blacklist (Don't Save Specific Reducers)
+  blacklist: [
+    'counterReducer',
+  ],
+}
+
+// Middleware: Redux Persist Persisted Reducer
+const persistedReducer = persistReducer(persistConfig, rootReducer)
+
+// Middleware: Redux Persist Store
 const store = createStore(
-  rootReducer,
+  persistedReducer,
   applyMiddleware(...middleware),
 );
 
+// Middleware: Redux Persist Persister
+let persistor = persistStore(store)
+
 // Redux: State
-store.subscribe(() => console.log('store', store.getState()));
+// store.subscribe(() => console.log('store', store.getState()));
 
 // Exports
-export default store;
+export {
+  store,
+  persistor
+};
