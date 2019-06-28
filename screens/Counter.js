@@ -8,25 +8,6 @@ const { height, width } = Dimensions.get('window');
 
 // Screen: Counter
 class Counter extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      counter: 0,
-    };
-  }
-
-  // Log In
-  login = () => {
-    try {
-      // Redux: Log In
-      this.props.reduxLogin();
-    }
-    catch (error) {
-      console.log(error);
-    }
-  }
-
   render() {
     return (
       <SafeAreaView style={styles.container}>
